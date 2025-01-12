@@ -346,6 +346,7 @@ func (c *Template) buildAllowedLocation(server *ingress.Server, location *ingres
 		buildDirective("proxy_buffer_size", location.Proxy.BufferSize),
 		buildDirective("proxy_buffers", location.Proxy.BuffersNumber, location.Proxy.BufferSize),
 		buildDirective("proxy_request_buffering", location.Proxy.RequestBuffering),
+		buildDirective("proxy_busy_buffers_size", location.Proxy.BusyBuffersSize),
 		buildDirective("proxy_http_version", location.Proxy.ProxyHTTPVersion),
 		buildDirective("proxy_cookie_domain", strings.Split(location.Proxy.CookieDomain, " ")),
 		buildDirective("proxy_cookie_path", strings.Split(location.Proxy.CookiePath, " ")),
@@ -396,6 +397,10 @@ func (c *Template) buildAllowedLocation(server *ingress.Server, location *ingres
 
 	if location.Satisfy != "" {
 		dir = append(dir, buildDirective("satisfy", location.Satisfy))
+	}
+
+	if location.Redirect.Relative {
+		dir = append(dir, buildDirective("absolute_redirect", false))
 	}
 
 	if len(location.CustomHTTPErrors) > 0 && !location.DisableProxyInterceptErrors {

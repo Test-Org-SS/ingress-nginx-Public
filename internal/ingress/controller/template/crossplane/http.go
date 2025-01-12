@@ -240,6 +240,10 @@ func (c *Template) buildHTTP() {
 		httpBlock = append(httpBlock, buildDirective("proxy_intercept_errors", "on"))
 	}
 
+	if cfg.RelativeRedirects {
+		httpBlock = append(httpBlock, buildDirective("absolute_redirect", false))
+	}
+
 	httpUpgradeMap := ngx_crossplane.Directives{buildDirective("default", "upgrade")}
 	if cfg.UpstreamKeepaliveConnections < 1 {
 		httpUpgradeMap = append(httpUpgradeMap, buildDirective("", "close"))
